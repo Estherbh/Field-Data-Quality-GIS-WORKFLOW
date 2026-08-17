@@ -47,7 +47,7 @@ def verify_against_injected(issues: pd.DataFrame) -> tuple[int, int, list[str]]:
     return found_total, expected_total, missed
 
 
-def run(regenerate: bool = False, figures: bool = True) -> dict:
+def run(regenerate: bool = False, figures: bool = True, write_outputs: bool = True) -> dict:
     cfg.ensure_directories()
 
     print(SEPARATOR)
@@ -85,17 +85,21 @@ def run(regenerate: bool = False, figures: bool = True) -> dict:
           f"INVALID {int(counts.get('INVALID', 0))}")
 
     print("[6/7] Writing outputs")
-    reporting.write_status_file(status)
-    reporting.write_review_file(issues, status)
-    validated = reporting.write_validated_outputs(gdf, status)
-    review_layer = reporting.write_review_layer(gdf, status)
-    reporting.write_overlaps(overlaps)
-    report = reporting.build_quality_report(raw, issues, status, overlaps)
-    tables = reporting.build_dashboard_tables(issues, status, report)
-    for path in (cfg.RECORD_STATUS_CSV, cfg.REVIEW_CSV, cfg.VALIDATED_CSV,
-                 cfg.VALIDATED_GEOJSON, cfg.REVIEW_GEOJSON, cfg.OVERLAPS_GEOJSON,
-                 cfg.QUALITY_REPORT_CSV):
-        print(f"  {path.relative_to(cfg.PROJECT_ROOT).as_posix()}")
+    reporting.write_status_file(status, write=write_outputs)
+    reporting.write_review_file(issues, status, write=write_outputs)
+    validated = reporting.write_validated_outputs(gdf, status, write=write_outputs)
+    review_layer = reporting.write_review_layer(gdf, status, write=write_outputs)
+    reporting.write_overlaps(overlaps, write=write_outputs)
+    report = reporting.build_quality_report(raw, issues, status, overlaps,
+                                            write=write_outputs)
+    tables = reporting.build_dashboard_tables(issues, status, report, write=write_outputs)
+    if write_outputs:
+        for path in (cfg.RECORD_STATUS_CSV, cfg.REVIEW_CSV, cfg.VALIDATED_CSV,
+                     cfg.VALIDATED_GEOJSON, cfg.REVIEW_GEOJSON, cfg.OVERLAPS_GEOJSON,
+                     cfg.QUALITY_REPORT_CSV):
+            print(f"  {path.relative_to(cfg.PROJECT_ROOT).as_posix()}")
+    else:
+        print("  dry run - checks executed, no file written")
 
     print("[7/7] Figures")
     if figures:
@@ -120,9 +124,8 @@ def run(regenerate: bool = False, figures: bool = True) -> dict:
         for item in missed:
             print(f"  NOT DETECTED: {item}")
     extra = len(issues) - found
-    print(f"Additional issues detected beyond the injected list: {extra}")
-    print("  (counterparts of a duplicated id or of an overlap, plus problems that")
-    print("   appeared by chance when the random parcels were drawn)")
+    print(f"Additional issues detected: {extra} (both sides of a duplicate id "
+          f"or of an overlap are flagged)")
     print(SEPARATOR)
 
     return {
@@ -137,8 +140,13 @@ def main() -> int:
                         help="rebuild the synthetic raw dataset before running the checks")
     parser.add_argument("--no-figures", action="store_true",
                         help="skip the map, dashboard and diagram rendering")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="run every check but write nothing (useful when the "
+                             "GeoJSON outputs are open in QGIS)")
     args = parser.parse_args()
-    run(regenerate=args.regenerate, figures=not args.no_figures)
+    run(regenerate=args.regenerate,
+        figures=not args.no_figures and not args.dry_run,
+        write_outputs=not args.dry_run)
     return 0
 
 

@@ -84,7 +84,8 @@ def build_record_status(frame: pd.DataFrame, issues: pd.DataFrame) -> pd.DataFra
 # --------------------------------------------------------------------------
 
 
-def write_review_file(issues: pd.DataFrame, status: pd.DataFrame) -> pd.DataFrame:
+def write_review_file(issues: pd.DataFrame, status: pd.DataFrame,
+                      write: bool = True) -> pd.DataFrame:
     """One row per detected issue, with the status of the record it belongs to."""
     review = issues.merge(
         status[["source_row", "qc_status"]], on="source_row", how="left"
@@ -92,25 +93,28 @@ def write_review_file(issues: pd.DataFrame, status: pd.DataFrame) -> pd.DataFram
     review = review[["record_id", "source_row", "site", "issue_code", "issue_description",
                      "issue_detail", "severity", "qc_status"]]
     review = review.rename(columns={"qc_status": "record_status"})
-    review.to_csv(cfg.REVIEW_CSV, index=False, encoding="utf-8")
+    if write:
+        review.to_csv(cfg.REVIEW_CSV, index=False, encoding="utf-8")
     return review
 
 
-def write_validated_outputs(gdf: gpd.GeoDataFrame, status: pd.DataFrame) -> gpd.GeoDataFrame:
+def write_validated_outputs(gdf: gpd.GeoDataFrame, status: pd.DataFrame,
+                            write: bool = True) -> gpd.GeoDataFrame:
     """Export the records that passed every rule, as CSV and as GeoJSON for QGIS."""
     merged = gdf.merge(status[["source_row", "qc_status", "issue_count"]], on="source_row")
     validated = merged[merged["qc_status"] == "VALID"].copy()
 
     table = validated[OUTPUT_COLUMNS].copy()
     table["qc_status"] = "VALID"
-    table.to_csv(cfg.VALIDATED_CSV, index=False, encoding="utf-8")
-
     layer = validated[OUTPUT_COLUMNS + ["qc_status", "geometry"]].copy()
-    layer.to_file(cfg.VALIDATED_GEOJSON, driver="GeoJSON")
+    if write:
+        table.to_csv(cfg.VALIDATED_CSV, index=False, encoding="utf-8")
+        layer.to_file(cfg.VALIDATED_GEOJSON, driver="GeoJSON")
     return layer
 
 
-def write_review_layer(gdf: gpd.GeoDataFrame, status: pd.DataFrame) -> gpd.GeoDataFrame:
+def write_review_layer(gdf: gpd.GeoDataFrame, status: pd.DataFrame,
+                       write: bool = True) -> gpd.GeoDataFrame:
     """Export the records needing attention that still have a usable geometry."""
     merged = gdf.merge(
         status[["source_row", "qc_status", "issue_count", "issue_codes", "max_severity"]],
@@ -122,20 +126,20 @@ def write_review_layer(gdf: gpd.GeoDataFrame, status: pd.DataFrame) -> gpd.GeoDa
     columns = ["record_id", "site", "survey_date", "collector_id", "land_use",
                "qc_status", "max_severity", "issue_count", "issue_codes", "geometry"]
     layer = plottable[columns]
-    layer.to_file(cfg.REVIEW_GEOJSON, driver="GeoJSON")
+    if write:
+        layer.to_file(cfg.REVIEW_GEOJSON, driver="GeoJSON")
     return layer
 
 
-def write_status_file(status: pd.DataFrame) -> None:
-    status.to_csv(cfg.RECORD_STATUS_CSV, index=False, encoding="utf-8")
+def write_status_file(status: pd.DataFrame, write: bool = True) -> None:
+    if write:
+        status.to_csv(cfg.RECORD_STATUS_CSV, index=False, encoding="utf-8")
 
 
-def write_overlaps(overlaps: gpd.GeoDataFrame) -> None:
+def write_overlaps(overlaps: gpd.GeoDataFrame, write: bool = True) -> None:
     """Export the overlap surfaces themselves, so QGIS can show what is shared."""
-    if overlaps.empty:
+    if write:
         overlaps.to_file(cfg.OVERLAPS_GEOJSON, driver="GeoJSON")
-        return
-    overlaps.to_file(cfg.OVERLAPS_GEOJSON, driver="GeoJSON")
 
 
 # --------------------------------------------------------------------------
@@ -161,6 +165,7 @@ def build_quality_report(
     issues: pd.DataFrame,
     status: pd.DataFrame,
     overlaps: gpd.GeoDataFrame,
+    write: bool = True,
 ) -> pd.DataFrame:
     """Build the metric,value quality report from the run itself."""
     counts = status["qc_status"].value_counts()
@@ -200,12 +205,14 @@ def build_quality_report(
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
     }
     report = pd.DataFrame({"metric": list(metrics), "value": list(metrics.values())})
-    report.to_csv(cfg.QUALITY_REPORT_CSV, index=False, encoding="utf-8")
+    if write:
+        report.to_csv(cfg.QUALITY_REPORT_CSV, index=False, encoding="utf-8")
     return report
 
 
 def build_dashboard_tables(issues: pd.DataFrame, status: pd.DataFrame,
-                           report: pd.DataFrame) -> dict[str, pd.DataFrame]:
+                           report: pd.DataFrame,
+                           write: bool = True) -> dict[str, pd.DataFrame]:
     """Write the tidy tables a BI tool (Power BI, Excel...) can consume directly."""
     issues_by_type = (
         issues.groupby("issue_code")
@@ -228,8 +235,10 @@ def build_dashboard_tables(issues: pd.DataFrame, status: pd.DataFrame,
 
     tables = {"kpi": report, "issues_by_type": issues_by_type, "records_by_site": by_site,
               "record_status": status}
-    for name, table in tables.items():
-        table.to_csv(cfg.DASHBOARD_DATA_DIR / f"{name}.csv", index=False, encoding="utf-8")
+    if write:
+        for name, table in tables.items():
+            table.to_csv(cfg.DASHBOARD_DATA_DIR / f"{name}.csv", index=False,
+                         encoding="utf-8")
     return tables
 
 
@@ -242,7 +251,7 @@ def _metric(report: pd.DataFrame, name: str):
     return report.loc[report["metric"] == name, "value"].iloc[0]
 
 
-def _kpi_tiles(ax, tiles: list[tuple[str, str, str]]) -> None:
+def _kpi_tiles(ax, tiles: list[tuple[str, str]]) -> None:
     """Draw a row of KPI tiles inside a blank axes."""
     ax.set_axis_off()
     ax.set_xlim(0, 1)
@@ -250,7 +259,7 @@ def _kpi_tiles(ax, tiles: list[tuple[str, str, str]]) -> None:
     n = len(tiles)
     gap = 0.012
     width = (1 - gap * (n - 1)) / n
-    for index, (value, label, color) in enumerate(tiles):
+    for index, (value, label) in enumerate(tiles):
         x = index * (width + gap)
         ax.add_patch(
             FancyBboxPatch(
@@ -258,10 +267,6 @@ def _kpi_tiles(ax, tiles: list[tuple[str, str, str]]) -> None:
                 boxstyle="round,pad=0,rounding_size=0.012",
                 linewidth=1, edgecolor=BORDER, facecolor=PANEL, transform=ax.transAxes,
             )
-        )
-        ax.add_patch(
-            Rectangle((x, 0.06), 0.006, 0.88, linewidth=0, facecolor=color,
-                      transform=ax.transAxes)
         )
         ax.text(x + width / 2, 0.60, value, ha="center", va="center", fontsize=30,
                 fontweight="bold", color=INK)
@@ -474,18 +479,19 @@ def _rules_card(ax) -> None:
     ax.text(0.04, 0.87, "How a record gets its status", fontsize=12, fontweight="bold",
             color=INK, transform=ax.transAxes)
     rows = [
-        ("Critical issue", "INVALID", "cannot be used as it is", STATUS_COLORS["INVALID"]),
-        ("High / Medium issue", "REVIEW", "must be checked by the field team",
-         STATUS_COLORS["REVIEW"]),
-        ("No issue", "VALID", "exported to validated_data", STATUS_COLORS["VALID"]),
+        ("Critical issue", "INVALID", "cannot be used as it is", "#a82c2c"),
+        ("High / Medium issue", "REVIEW", "must be checked by the field team", "#87610a"),
+        ("No issue", "VALID", "exported to validated_data", "#0a7d0a"),
     ]
     for index, (condition, status_name, comment, color) in enumerate(rows):
         y = 0.66 - index * 0.20
-        ax.add_patch(Rectangle((0.04, y - 0.025), 0.008, 0.11, linewidth=0, facecolor=color,
-                               transform=ax.transAxes))
-        ax.text(0.075, y + 0.062, f"{condition}  ->  {status_name}", fontsize=10.5,
-                fontweight="bold", color=INK, transform=ax.transAxes, va="center")
-        ax.text(0.075, y - 0.012, comment, fontsize=9.5, color=INK_SECONDARY,
+        ax.text(0.04, y + 0.062, condition, fontsize=10.5, color=INK,
+                transform=ax.transAxes, va="center")
+        ax.text(0.44, y + 0.062, "->", fontsize=10.5, color=INK_MUTED,
+                transform=ax.transAxes, va="center")
+        ax.text(0.52, y + 0.062, status_name, fontsize=10.5, fontweight="bold",
+                color=color, transform=ax.transAxes, va="center")
+        ax.text(0.04, y - 0.012, comment, fontsize=9.5, color=INK_SECONDARY,
                 transform=ax.transAxes, va="center")
     ax.text(0.04, 0.07,
             "The raw file is never modified. All data are synthetic.",
@@ -520,12 +526,12 @@ def make_dashboard_figure(report: pd.DataFrame, tables: dict[str, pd.DataFrame],
     )
 
     tiles = [
-        (f"{_metric(report, 'total_records')}", "Total records", SERIES),
-        (f"{_metric(report, 'valid_records')}", "Validated", STATUS_COLORS["VALID"]),
-        (f"{_metric(report, 'records_for_review')}", "Requiring review", STATUS_COLORS["REVIEW"]),
-        (f"{_metric(report, 'invalid_records')}", "Invalid", STATUS_COLORS["INVALID"]),
-        (f"{_metric(report, 'required_field_completeness_pct')}%", "Field completeness", SERIES),
-        (f"{_metric(report, 'spatial_issues')}", "Spatial issues", "#4a3aa7"),
+        (f"{_metric(report, 'total_records')}", "Total records"),
+        (f"{_metric(report, 'valid_records')}", "Validated"),
+        (f"{_metric(report, 'records_for_review')}", "Requiring review"),
+        (f"{_metric(report, 'invalid_records')}", "Invalid"),
+        (f"{_metric(report, 'required_field_completeness_pct')}%", "Field completeness"),
+        (f"{_metric(report, 'spatial_issues')}", "Spatial issues"),
     ]
     kpi_grid = fig.add_gridspec(1, 1, left=0.045, right=0.965, top=0.905, bottom=0.795)
     _kpi_tiles(fig.add_subplot(kpi_grid[0, 0]), tiles)
@@ -553,14 +559,14 @@ def make_dashboard_figure(report: pd.DataFrame, tables: dict[str, pd.DataFrame],
 def make_workflow_diagram() -> None:
     """Draw the workflow diagram used in the README and the portfolio case study."""
     steps = [
-        ("Field data", "100 synthetic records", SERIES),
-        ("Raw data", "CSV + GeoJSON, never modified", SERIES),
-        ("Automated quality check", "attributes - completeness - consistency", "#4a3aa7"),
-        ("Spatial validation", "geometry - study area - overlaps", "#4a3aa7"),
-        ("Error report", "records_to_review.csv + quality_report.csv", STATUS_COLORS["REVIEW"]),
-        ("Validated data", "validated_data.csv + .geojson", STATUS_COLORS["VALID"]),
-        ("QGIS spatial review", "map, legend, scale, overlaps", STATUS_COLORS["VALID"]),
-        ("Dashboard / reporting", "KPI, issues by type, map", STATUS_COLORS["VALID"]),
+        ("Field data", "100 synthetic records"),
+        ("Raw data", "CSV + GeoJSON, never modified"),
+        ("Automated quality check", "attributes - completeness - consistency"),
+        ("Spatial validation", "geometry - study area - overlaps"),
+        ("Error report", "records_to_review.csv + quality_report.csv"),
+        ("Validated data", "validated_data.csv + .geojson"),
+        ("QGIS spatial review", "map, legend, scale, overlaps"),
+        ("Dashboard / reporting", "KPI, issues by type, map"),
     ]
     fig, ax = plt.subplots(figsize=(7.5, 11))
     ax.set_axis_off()
@@ -572,14 +578,13 @@ def make_workflow_diagram() -> None:
             fontweight="bold", color=INK)
 
     top, box_height, gap = 0.895, 0.079, 0.031
-    for index, (title, subtitle, color) in enumerate(steps):
+    for index, (title, subtitle) in enumerate(steps):
         y = top - index * (box_height + gap) - box_height
         ax.add_patch(
             FancyBboxPatch((0.08, y), 0.84, box_height,
                            boxstyle="round,pad=0,rounding_size=0.012",
                            linewidth=1.2, edgecolor=BORDER, facecolor=PANEL)
         )
-        ax.add_patch(Rectangle((0.08, y), 0.008, box_height, linewidth=0, facecolor=color))
         ax.text(0.5, y + box_height * 0.62, title, ha="center", fontsize=12.5,
                 fontweight="bold", color=INK)
         ax.text(0.5, y + box_height * 0.26, subtitle, ha="center", fontsize=9.5,
@@ -587,7 +592,6 @@ def make_workflow_diagram() -> None:
         if index < len(steps) - 1:
             ax.annotate("", xy=(0.5, y - gap + 0.004), xytext=(0.5, y - 0.004),
                         arrowprops=dict(arrowstyle="-|>", color=INK_MUTED, linewidth=1.4))
-    ax.text(0.5, 0.022, "Synthetic data - portfolio demonstration", ha="center", fontsize=9,
-            color=INK_MUTED)
+    ax.text(0.5, 0.022, "100% synthetic data", ha="center", fontsize=9, color=INK_MUTED)
     fig.savefig(cfg.WORKFLOW_DIAGRAM_PNG, dpi=170, bbox_inches="tight")
     plt.close(fig)
