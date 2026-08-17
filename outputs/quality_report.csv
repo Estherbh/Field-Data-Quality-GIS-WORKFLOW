@@ -1,0 +1,25 @@
+metric,value
+total_records,100
+valid_records,63
+records_for_review,31
+invalid_records,6
+valid_records_pct,63.0
+required_field_completeness_pct,98.7
+total_issues,42
+attribute_issues,25
+spatial_issues,17
+duplicate_records,4
+records_with_missing_required_fields,9
+invalid_coordinates,3
+invalid_survey_dates,4
+non_positive_area_values,2
+suspicious_area_values,2
+invalid_category_values,3
+missing_geometries,2
+invalid_geometries,2
+geometries_out_of_study_area,2
+attribute_geometry_mismatches,5
+overlapping_records,6
+overlapping_pairs,3
+pipeline_version,1.0
+generated_at,2026-08-17 12:26

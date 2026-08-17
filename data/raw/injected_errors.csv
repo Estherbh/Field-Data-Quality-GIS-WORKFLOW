@@ -1,0 +1,33 @@
+source_row,record_id,injected_error,expected_issue_codes,comment
+5,PL004,collection status outside the allowed list,invalid_collection_status,
+7,PL006,collector_id removed,missing_collector_id,
+9,PL007,record_id duplicated,duplicate_record_id,same id as source row 8
+11,PL010,abnormally large area,suspicious_area;area_attribute_mismatch,
+13,PL012,area inflated 3x (typing error),area_attribute_mismatch,
+14,PL013,latitude removed,missing_latitude,
+17,PL016,latitude decimal shift,coordinates_out_of_study_area;geometry_attribute_mismatch,
+20,PL019,area set to zero,non_positive_area,
+24,PL023,parcel moved on top of a neighbouring parcel,spatial_overlap,overlaps record PL022
+25,PL024,longitude removed,missing_longitude,
+29,PL028,land_use outside the allowed list,invalid_land_use,
+31,PL030,self-intersecting polygon,invalid_geometry,
+33,PL032,survey_date removed,missing_survey_date,
+38,PL037,geometry removed,missing_geometry,
+42,PL041,parcel located outside the study area,coordinates_out_of_study_area;geometry_out_of_study_area,
+47,PL046,latitude removed,missing_latitude,
+50,PL049,parcel moved on top of a neighbouring parcel,spatial_overlap,overlaps record PL048
+51,PL050,site removed,missing_site,
+54,PL053,negative area,non_positive_area,
+57,PL056,survey date in the future,invalid_survey_date,
+60,PL059,self-intersecting polygon,invalid_geometry,
+63,PL061,record_id duplicated,duplicate_record_id,same id as source row 62
+65,PL064,empty geometry,missing_geometry,
+68,PL067,abnormally large area,suspicious_area;area_attribute_mismatch,
+70,PL069,impossible calendar date,invalid_survey_date,
+73,PL072,land_use outside the allowed list,invalid_land_use,
+76,PL075,area inflated 3x (typing error),area_attribute_mismatch,
+79,PL078,survey_date removed,missing_survey_date,
+84,PL083,area removed,missing_area_ha,
+85,PL084,parcel located outside the study area,coordinates_out_of_study_area;geometry_out_of_study_area,
+90,PL089,collector_id removed,missing_collector_id,
+94,PL093,parcel moved on top of a neighbouring parcel,spatial_overlap,overlaps record PL092

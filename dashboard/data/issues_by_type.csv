@@ -1,0 +1,20 @@
+issue_code,issues,records,severity,check_family,label
+spatial_overlap,6,6,Medium,spatial,Overlapping parcel
+duplicate_record_id,4,4,High,attribute,Duplicate id
+area_attribute_mismatch,4,4,Medium,spatial,Area mismatch
+coordinates_out_of_study_area,3,3,High,attribute,Coords outside area
+geometry_out_of_study_area,2,2,High,spatial,Polygon outside area
+invalid_survey_date,2,2,High,attribute,Invalid date
+invalid_geometry,2,2,Critical,spatial,Invalid geometry
+missing_collector_id,2,2,High,attribute,Missing collector
+missing_survey_date,2,2,High,attribute,Missing date
+missing_geometry,2,2,Critical,spatial,Missing geometry
+invalid_land_use,2,2,Medium,attribute,Invalid land use
+non_positive_area,2,2,Critical,attribute,Area zero or negative
+suspicious_area,2,2,Medium,attribute,Suspicious area
+missing_latitude,2,2,High,attribute,Missing latitude
+geometry_attribute_mismatch,1,1,Medium,spatial,Point/polygon gap
+missing_area_ha,1,1,High,attribute,Missing area
+invalid_collection_status,1,1,Medium,attribute,Invalid status
+missing_site,1,1,High,attribute,Missing site
+missing_longitude,1,1,High,attribute,Missing longitude

@@ -1,0 +1,38 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Conservation Landscape Data Project (synthetic)"
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       0.07,
+       -0.07
+      ],
+      [
+       0.07,
+       0.07
+      ],
+      [
+       -0.07,
+       0.07
+      ],
+      [
+       -0.07,
+       -0.07
+      ],
+      [
+       0.07,
+       -0.07
+      ]
+     ]
+    ]
+   }
+  }
+ ]
+}

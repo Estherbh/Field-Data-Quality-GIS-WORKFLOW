@@ -1,0 +1,21 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Editors and operating system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# QGIS temporary backups
+*.qgz~
+*.qgs~
+*.bak
+
+# Local video exports
+*.mp4
+*.gif

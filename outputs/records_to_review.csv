@@ -1,0 +1,43 @@
+record_id,source_row,site,issue_code,issue_description,issue_detail,severity,record_status
+PL004,5,Site Alpha,invalid_collection_status,status is outside the allowed value list,status = 'Complete',Medium,REVIEW
+PL006,7,Site Alpha,missing_collector_id,collector_id is empty,collector_id is empty,High,REVIEW
+PL007,8,Site Alpha,duplicate_record_id,record_id is used by more than one record,record_id used by 2 records,High,REVIEW
+PL007,9,Site Alpha,duplicate_record_id,record_id is used by more than one record,record_id used by 2 records,High,REVIEW
+PL010,11,Site Alpha,area_attribute_mismatch,area_ha does not match the polygon area,declared 640.50 ha vs computed 4.93 ha,Medium,REVIEW
+PL010,11,Site Alpha,suspicious_area,area_ha is above 100 ha,area_ha = 640.5,Medium,REVIEW
+PL012,13,Site Alpha,area_attribute_mismatch,area_ha does not match the polygon area,declared 20.16 ha vs computed 6.72 ha,Medium,REVIEW
+PL013,14,Site Alpha,missing_latitude,latitude is empty,latitude is empty,High,REVIEW
+PL016,17,Site Alpha,coordinates_out_of_study_area,point coordinates fall outside the study area,"latitude = 12.4083, longitude = -0.061532",High,REVIEW
+PL016,17,Site Alpha,geometry_attribute_mismatch,polygon location does not match latitude/longitude,"1,369,714 m between the point and the polygon",Medium,REVIEW
+PL019,20,Site Alpha,non_positive_area,area_ha is zero or negative,area_ha = 0.0,Critical,INVALID
+PL022,23,Site Alpha,spatial_overlap,polygon overlaps another parcel,"overlaps PL023 (1.40 ha, 58% of the smaller parcel)",Medium,REVIEW
+PL023,24,Site Alpha,spatial_overlap,polygon overlaps another parcel,"overlaps PL022 (1.40 ha, 58% of the smaller parcel)",Medium,REVIEW
+PL024,25,Site Alpha,missing_longitude,longitude is empty,longitude is empty,High,REVIEW
+PL028,29,Site Alpha,invalid_land_use,land_use is outside the allowed value list,land_use = 'Uknown',Medium,REVIEW
+PL030,31,Site Alpha,invalid_geometry,geometry is not valid (self-intersection or similar),Self-intersection[-0.0239868913957124 0.0247861734269215],Critical,INVALID
+PL032,33,Site Alpha,missing_survey_date,survey_date is empty,survey_date is empty,High,REVIEW
+PL037,38,Site Beta,missing_geometry,geometry is null or empty,geometry is null or empty,Critical,INVALID
+PL041,42,Site Beta,coordinates_out_of_study_area,point coordinates fall outside the study area,"latitude = -0.05171, longitude = 0.123339",High,REVIEW
+PL041,42,Site Beta,geometry_out_of_study_area,polygon is not fully inside the study area,"polygon bounds: 0.1214, -0.0540, 0.1251, -0.0495",High,REVIEW
+PL046,47,Site Beta,missing_latitude,latitude is empty,latitude is empty,High,REVIEW
+PL048,49,Site Beta,spatial_overlap,polygon overlaps another parcel,"overlaps PL049 (1.70 ha, 65% of the smaller parcel)",Medium,REVIEW
+PL049,50,Site Beta,spatial_overlap,polygon overlaps another parcel,"overlaps PL048 (1.70 ha, 65% of the smaller parcel)",Medium,REVIEW
+PL050,51,,missing_site,site is empty,site is empty,High,REVIEW
+PL053,54,Site Beta,non_positive_area,area_ha is zero or negative,area_ha = -3.4,Critical,INVALID
+PL056,57,Site Beta,invalid_survey_date,survey_date is unparseable or out of the survey period,survey_date = '2027-04-18' (expected 2025-01-06 .. today),High,REVIEW
+PL059,60,Site Beta,invalid_geometry,geometry is not valid (self-intersection or similar),Self-intersection[0.00254071825137538 -0.0628781063536223],Critical,INVALID
+PL061,62,Site Beta,duplicate_record_id,record_id is used by more than one record,record_id used by 2 records,High,REVIEW
+PL061,63,Site Beta,duplicate_record_id,record_id is used by more than one record,record_id used by 2 records,High,REVIEW
+PL064,65,Site Beta,missing_geometry,geometry is null or empty,geometry is null or empty,Critical,INVALID
+PL067,68,Site Beta,area_attribute_mismatch,area_ha does not match the polygon area,declared 1250.00 ha vs computed 8.45 ha,Medium,REVIEW
+PL067,68,Site Beta,suspicious_area,area_ha is above 100 ha,area_ha = 1250.0,Medium,REVIEW
+PL069,70,Site Gamma,invalid_survey_date,survey_date is unparseable or out of the survey period,survey_date = '2026-02-31' (expected 2025-01-06 .. today),High,REVIEW
+PL072,73,Site Gamma,invalid_land_use,land_use is outside the allowed value list,land_use = 'forest land',Medium,REVIEW
+PL075,76,Site Gamma,area_attribute_mismatch,area_ha does not match the polygon area,declared 11.16 ha vs computed 3.72 ha,Medium,REVIEW
+PL078,79,Site Gamma,missing_survey_date,survey_date is empty,survey_date is empty,High,REVIEW
+PL083,84,Site Gamma,missing_area_ha,area_ha is empty,area_ha is empty,High,REVIEW
+PL084,85,Site Gamma,coordinates_out_of_study_area,point coordinates fall outside the study area,"latitude = -0.101266, longitude = 0.054737",High,REVIEW
+PL084,85,Site Gamma,geometry_out_of_study_area,polygon is not fully inside the study area,"polygon bounds: 0.0530, -0.1029, 0.0565, -0.0996",High,REVIEW
+PL089,90,Site Gamma,missing_collector_id,collector_id is empty,collector_id is empty,High,REVIEW
+PL092,93,Site Gamma,spatial_overlap,polygon overlaps another parcel,"overlaps PL093 (5.53 ha, 38% of the smaller parcel)",Medium,REVIEW
+PL093,94,Site Gamma,spatial_overlap,polygon overlaps another parcel,"overlaps PL092 (5.53 ha, 38% of the smaller parcel)",Medium,REVIEW

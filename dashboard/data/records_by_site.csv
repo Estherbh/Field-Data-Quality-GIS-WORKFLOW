@@ -1,0 +1,5 @@
+site,VALID,REVIEW,INVALID,total_records
+(missing site),0,1,0,1
+Site Alpha,19,13,2,34
+Site Beta,20,8,4,32
+Site Gamma,24,9,0,33
