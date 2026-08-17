@@ -65,8 +65,9 @@ The pipeline produces these metrics in outputs/quality_report.csv. A single synt
 
 ## QGIS review
 
-Open outputs/validated_data.geojson, outputs/records_to_review.geojson and outputs/spatial_overlaps.geojson in QGIS. Follow docs/QGIS_MAP_GUIDE_FR.md to create the final map.
+Open outputs/validated_data.geojson, outputs/records_to_review.geojson and outputs/spatial_overlaps.geojson in QGIS. Follow docs/QGIS_MAP_GUIDE_FR.md to create the final map.`n`n![Final QGIS map](docs/qgis_map_layout.png)
 
 ## Data and confidentiality
 
 Confidentiality Notice: This portfolio project uses entirely synthetic data created for demonstration purposes. No operational, organizational, producer, geographic or other confidential data from professional projects are included.
+
