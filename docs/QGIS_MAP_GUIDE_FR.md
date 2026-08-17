@@ -39,3 +39,8 @@ Active les étiquettes de records_to_review.geojson sur le champ record_id. Dans
 - [ ] La mise en page comprend titre, légende, échelle et nord.
 - [ ] La capture finale est docs/qgis_map_layout.png.
 - [ ] Aucune donnée réelle ou confidentielle n’apparaît.
+
+
+## Couche supplémentaire recommandée
+
+Ajoute aussi data/synthetic/study_area.geojson. Place-la sous les autres couches avec un remplissage transparent et un contour gris foncé ou bleu foncé. Elle donne le contexte spatial sans masquer les parcelles.
