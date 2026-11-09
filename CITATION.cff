@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use or adapt this work, please cite it as below."
+title: "Field Data Quality & GIS Workflow"
+abstract: "A reproducible workflow for validating, cleaning and preparing field-based geospatial data for GIS analysis and reporting."
+type: software
+authors:
+  - family-names: "Bahati"
+    given-names: "Esther"
+    website: "https://eurekapx.com/portefolio"
+repository-code: "https://github.com/Estherbh/Field-Data-Quality-GIS-WORKFLOW"
+license: MIT
+date-released: "2026-11-09"
+keywords:
+  - GIS
+  - data quality
+  - geospatial
+  - QGIS
+  - GeoPandas

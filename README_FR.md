@@ -2,6 +2,8 @@
 
 Des données brutes de terrain à une information géospatiale validée.
 
+Conçu et réalisé par **Esther Bahati**.
+
 English version: [README.md](README.md)
 
 ## Présentation
@@ -117,3 +119,27 @@ Les visuels prêts à publier et les textes de la case study se trouvent dans
 données synthétiques créées pour la démonstration. Aucune donnée opérationnelle,
 organisationnelle, géographique ou confidentielle issue d'un projet professionnel
 n'y figure.
+
+## Auteure
+
+**Esther Bahati**, conceptrice et développeuse de ce projet.
+
+- Portfolio : [eurekapx.com/portefolio](https://eurekapx.com/portefolio)
+- LinkedIn : [esther-cbahati](https://www.linkedin.com/in/esther-cbahati)
+- GitHub : [@Estherbh](https://github.com/Estherbh)
+
+## Comment citer ce travail
+
+Si vous utilisez, adaptez ou mentionnez ce projet, merci de créditer l'auteure :
+
+> Bahati, E. (2026). *Field Data Quality & GIS Workflow*.
+> https://github.com/Estherbh/Field-Data-Quality-GIS-WORKFLOW
+
+Les métadonnées de citation sont aussi dans [CITATION.cff](CITATION.cff)
+(GitHub affiche alors un bouton « Cite this repository »).
+
+## Licence
+
+Publié sous [licence MIT](LICENSE). Le code peut être réutilisé à condition de
+conserver la mention de copyright avec le nom de l'auteure et le texte de la
+licence.
