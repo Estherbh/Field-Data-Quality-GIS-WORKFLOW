@@ -127,6 +127,8 @@ n'y figure.
 - Portfolio : [eurekapx.com/portefolio](https://eurekapx.com/portefolio)
 - LinkedIn : [esther-cbahati](https://www.linkedin.com/in/esther-cbahati)
 - GitHub : [@Estherbh](https://github.com/Estherbh)
+- Opportunités professionnelles : [estherbahaticb@gmail.com](mailto:estherbahaticb@gmail.com)
+- Collaborations : [helloesther@eurekapx.com](mailto:helloesther@eurekapx.com)
 
 ## Comment citer ce travail
 
